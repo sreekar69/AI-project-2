@@ -1,1 +1,92 @@
 
+import collections
+
+
+# Parse input file to extract graph information
+graph = collections.defaultdict(list)
+with open("input.txt", "r") as f:
+    colors = int(f.readline().split()[2])
+    for line in f:
+        if line.startswith("#"):
+            continue
+        u, v = map(int, line.strip().split(","))
+        graph[u].append(v)
+        graph[v].append(u)
+
+# Define CSP solver function
+def csp(graph, colors):
+    # Define domain of each vertex as all possible colors
+    domains = {v: set(range(1, colors+1)) for v in graph}
+
+    # Implement AC3 algorithm for constraint propagation
+    queue = [(u, v) for u in graph for v in graph[u]]
+    while queue:
+        u, v = queue.pop(0)
+        if revise(domains, u, v):
+            if not domains[u]:
+                return None
+            for w in graph[u]:
+                if w != v:
+                    queue.append((w, u))
+
+    # Call backtracking function to solve CSP
+    solution = backtrack({}, graph, domains)
+    return solution
+
+
+# Backtracking function
+def backtrack(assignment, graph, domains):
+    # If assignment is complete, return it
+    if len(assignment) == len(graph):
+        return assignment
+
+    # Choose the next unassigned variable using minimum remaining values heuristic
+    unassigned = [v for v in graph if v not in assignment]
+    next_var = min(unassigned, key=lambda v: len(domains[v]))
+
+    # Try assigning each value in the domain of the next variable
+    for value in domains[next_var].copy():
+        if is_consistent(next_var, value, assignment, graph):
+            assignment[next_var] = value
+            # Update domains of neighboring vertices
+            new_domains = domains.copy()
+            for neighbor in graph[next_var]:
+                new_domains[neighbor].discard(value)
+            # Recursive call to backtrack with new assignment and domains
+            result = backtrack(assignment, graph, new_domains)
+            if result is not None:
+                return result
+            # If no solution is found, undo assignment
+            del assignment[next_var]
+
+    # If no solution is found, return None
+    return None
+
+
+# Check consistency of assignment
+def is_consistent(var, value, assignment, graph):
+    for neighbor in graph[var]:
+        if neighbor in assignment and assignment[neighbor] == value:
+            return False
+    return True
+
+
+# AC3 algorithm for constraint propagation
+def revise(domains, u, v):
+    revised = False
+    for x in domains[u].copy():
+        if all(not is_consistent(v, y, {u: x}, graph) for y in domains[v]):
+            domains[u].discard(x)
+            revised = True
+    return revised
+
+
+# Call CSP solver function
+solution = csp(graph, colors)
+
+# Print solution
+if solution is not None:
+    for v, color in solution.items():
+        print(f"Vertex {v}: Color {color}")
+else:
+    print("No valid coloring exists.")
