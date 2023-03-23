@@ -21,4 +21,4 @@ g. If the search fails, undo the assignment and revert the domain changes.
 
 
 #How to implement
-Run from the terminal----python main.py "C:\Users\sreek\PycharmProjects\AI project 2\input"
+Run from the terminal----python main.py "C:\Users\sreek\PycharmProjects\AI project 2\input"     
