@@ -16,3 +16,9 @@ g. If the search fails, undo the assignment and revert the domain changes.
 •	Define the AC3 algorithm for constraint propagation: a. Initialize the queue with all arcs in the constraints. b. Iterate over the arcs in the queue, and revise the domain of the first variable. c. If the domain of the first variable has been reduced, add all arcs from the first variable to the queue. d. If the domain of any variable is empty, the CSP has no solution.
 •	Define helper functions to count conflicts and check consistency.
 •	The algorithm uses heuristics to select the next variable and value to assign, in order to reduce the search space and find a solution more efficiently. The minimum remaining values heuristic selects the variable with the fewest remaining values in its domain, while the least constraining value heuristic selects the value that rules out the fewest values in other variables' domains. The AC3 algorithm propagates constraints by iteratively reducing the domains of variables that violate constraints, until a fixed point is reached. The algorithm uses backtracking search to recover from failed assignments and continue the search for a solution.
+
+
+
+
+#How to implement
+Run from the terminal----python main.py "C:\Users\sreek\PycharmProjects\AI project 2\input"
