@@ -2,6 +2,7 @@
 Problem statement-
 Graph Colouring -You are given a graph in the form of a text file, that you are supposed to colour. The proper vertex colouring is such that each vertex is assigned a colour and no two adjacent vertices are assigned the same colour.
 Approach description-
+
 •	Parse the input file to obtain the graph, number of colours, and variables.
 •	Define the domains for each variable, initially all colours are allowed for all variables.
 •	Define the constraints: adjacent vertices cannot have the same colour.
